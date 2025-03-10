@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="icon-removebg-preview.png" type="image/x-icon">
+    <title>Quote Generator</title>
+</head>
+<body>
+    
+    
+    <div class="quote-box">
+        <h2>Quote of the day</h2>
+        <blockquote id="quote">Loading...</blockquote>
+        <span id="author">Loading...</span>
+        <div>
+            <button onclick="getQuote(apiUrl)">New Quote</button>
+            <button onclick="tweet()"><img src="twitter.png">Tweet</button>
+        </div>
+    </div>    
+
+    <script>
+        const quote = document.getElementById("quote");
+        const author = document.getElementById("author");
+        const apiUrl = "https://api.adviceslip.com/advice";
+    
+        function getRandomName() {
+            const firstNames = ["John", "Emily", "Ava", "Michael", "Olivia", "Liam", "Sophia"];
+            const lastNames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Martinez"];
+            
+            const randomFirst = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const randomLast = lastNames[Math.floor(Math.random() * lastNames.length)];
+            
+            return `${randomFirst} ${randomLast}`;
+        }
+    
+        async function getQuote(url) {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                quote.innerHTML = `"${data.slip.advice}"`;
+                author.innerHTML = ` ${getRandomName()}`;
+            } catch (error) {
+                quote.innerHTML = "Oops! Could not fetch advice.";
+                author.innerHTML = `Unknown`;
+            }
+        }
+    
+        getQuote(apiUrl);
+    
+        function tweet() {
+            window.open(
+                "https://twitter.com/intent/tweet?text=" +
+                encodeURIComponent(`${quote.innerHTML} ${author.innerHTML}`),
+                "Tweet Window",
+                "width=600, height=300"
+            );
+        }
+    </script>
+    
+
+</body>
+</html>
